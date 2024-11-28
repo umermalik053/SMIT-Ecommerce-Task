@@ -1,13 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
+import { auth, onAuthStateChanged,signOut  } from "../Firebase/firebase";
 const Header = () => {
+  const navigate = useNavigate()
+  const [userExist , SetUserExist] = useState(false)
   const Cart = useSelector((state) => state?.Cart);
   console.log(Cart);
   const ReducePrice = Cart.reduce((acc, current) => {
     return acc + current.price;
   }, 0);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        SetUserExist(true)
+      }else{
+        SetUserExist(false)
+      }
+    });
+   
+  }, []);
+
+  const user =()=>{
+    signOut(auth).then(() => {
+      navigate("/SignIn")
+    }).catch((error) => {
+      // An error happened.
+    });
+  }
+
+  
 
   return (
     <div className="navbar bg-base-100 max-w-[1200px] mx-auto py-3 flex justify-between">
@@ -23,7 +47,7 @@ const Header = () => {
         
       </div>
       <div className="navbar-center flex max-w-[330px] ">
-        <ul className="menu  menu-horizontal block sm:menu-horizontal sm:hidden  md:menu-horizontal xs:menu-xs bg-base-100 navbar-center lg:menu-horizontal rounded-box">
+        <ul className="menu  menu-horizontal  sm:menu-horizontal hidden  md:menu-horizontal xs:menu-xs bg-base-100 navbar-center lg:menu-horizontal rounded-box">
           <NavLink to="/">
             <li>
               <a>Home</a>
@@ -45,7 +69,7 @@ const Header = () => {
             </li>
           </NavLink>
         </ul>
-        <div className="dropdown dropdown-bottom sm:hidden">
+        <div className="dropdown dropdown-bottom sm:hidden ">
           <div tabIndex={0} role="button" className="btn m-1">
             <svg
               className="swap-off fill-current"
@@ -123,7 +147,9 @@ const Header = () => {
             </div>
           </div>
         </div>
-        <div className="dropdown dropdown-end">
+         {
+          userExist ? 
+          <div className="dropdown dropdown-end">
           <div
             tabIndex={0}
             role="button"
@@ -132,7 +158,7 @@ const Header = () => {
             <div className="w-10 rounded-full">
               <img
                 alt="Tailwind CSS Navbar component"
-                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                src="/assets/image/NewUser.jpg"
               />
             </div>
           </div>
@@ -140,15 +166,39 @@ const Header = () => {
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
           >
-            <li>
-              <a className="justify-between">Profile</a>
-            </li>
             
-            <li>
+            <li onClick={()=>user()}>
               <a>Logout</a>
             </li>
           </ul>
+        </div> : <div className="dropdown dropdown-end">
+          <div
+            tabIndex={0}
+            role="button"
+            className="btn btn-ghost btn-circle avatar"
+          >
+            <div className="w-10 rounded-full">
+              <img
+                alt="Tailwind CSS Navbar component"
+                src="/assets/image/UserImage.jpg"
+              />
+            </div>
+          </div>
+          <ul
+            tabIndex={0}
+            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+          >
+            
+            <li onClick={()=>navigate("/SignIn")}>
+              <a>Sign In</a>
+            </li>
+            <li onClick={()=>navigate("/SignUp")}>
+              <a>Sign Up</a>
+            </li>
+          </ul>
         </div>
+         }
+        
       </div>
     </div>
   );

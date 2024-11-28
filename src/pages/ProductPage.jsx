@@ -4,14 +4,21 @@ import { useSelector } from 'react-redux'
 import Footer from '../components/Footer'
 import FooterSubcontent from '../components/FooterSubcontent'
 import ProductCard from '../components/common/productCard'
+import { auth, onAuthStateChanged } from '../Firebase/firebase'
+import { useNavigate } from 'react-router'
 
 const ProductPage = () => {
   const ProductData = useSelector((state) =>state?.AllProducts)
-  console.log(ProductData)
+  const navigate = useNavigate()
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []); // To prevent scrolling to top on every render
-
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        navigate("/SignUp");
+      }
+    });
+   
+  }, []);
   return (
 
     <div>

@@ -4,13 +4,12 @@ import { useSelector } from 'react-redux'
 
 const Checkout = () => {
     const CartData = useSelector((state)=>state?.Cart)
-    CartData.map((item)=>{
-      console.log(item.category)
-    })
+   
     let priceCalculate = CartData.reduce((acc,curr)=>{
-      return  acc + curr.price
+      return  acc + curr.price * curr.quantity 
     },0)
     const shipping = CartData.length ? 20 : 0
+    // const shipping = 0
   return (
       <div className='max-w-[1200px] mx-auto '>
       <div className="container">

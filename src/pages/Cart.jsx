@@ -1,10 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import CartProduct from "../components/common/CartProduct";
 import FooterSubcontent from "../components/FooterSubcontent";
+import { useNavigate } from "react-router";
+import { auth, onAuthStateChanged } from "../Firebase/firebase";
 
 const Cart = () => {
+  const navigate = useNavigate()
+  useEffect(()=>{
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        
+       navigate("/SignUp")
+      } 
+    },[])
+  })
   return (
     <div>
       <Header />

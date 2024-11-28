@@ -1,13 +1,10 @@
-
-import { createUserWithEmailAndPassword, auth, onAuthStateChanged } from '../Firebase/firebase'
 import React, { useEffect, useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useNavigate } from "react-router";
+import { auth, onAuthStateChanged, signInWithEmailAndPassword } from '../Firebase/firebase'
 
-
-const SignUp = () => {
-  
-  const navigate = useNavigate()
+const SignIn = () => {
+    const navigate = useNavigate()
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -40,22 +37,22 @@ const SignUp = () => {
   const handleLogin = (e) => {
     e.preventDefault(); 
     if (validateForm()) {
-      createUserWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
-    // Signed up 
-    const user = userCredential.user;
-      navigate("/")
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // ..
-  });
-     
+        signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed in 
+          const user = userCredential.user;
+         navigate("/")
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorMessage)
+        });
+      
     }
   };
   useEffect(() => {
-
     window.scrollTo(0, 0);
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -68,7 +65,7 @@ const SignUp = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#F0F0F0]">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
-        <h1 className="text-3xl font-bold text-center mb-6 text-black">Sign Up</h1>
+        <h1 className="text-3xl font-bold text-center mb-6 text-black">Sign In</h1>
         <form className="space-y-6" onSubmit={handleLogin}>
           {/* Email Field */}
           <div className="flex flex-col">
@@ -114,7 +111,7 @@ const SignUp = () => {
             />
             {/* Show/Hide Password Icon */}
             <div
-              className="absolute right-2 top-[55px] transform -translate-y-1/2 text-black cursor-pointer "
+              className="absolute right-2 top-[55px] transform -translate-y-1/2 text-black cursor-pointer"
               onClick={() => setShowPassword(!showPassword)}
             >
               {!showPassword ? (
@@ -127,15 +124,17 @@ const SignUp = () => {
               <p className="text-red-500 text-sm mt-1">{errors.password}</p>
             )}
           </div>
-          <p className="text-[#717171]">Don't Have An Account? <span className="text-black cursor-pointer"  onClick={()=>navigate("/SignIn")}>Sign In</span> </p>
+
+        <p className="text-[#717171]">Don't Have An Account? <span className="text-black cursor-pointer"  onClick={()=>navigate("/SignUp")}>Sign Up</span> </p>
         
+
           {/* Login Button */}
           <button
           onClick={handleLogin}
             type="submit"
             className="w-full bg-black text-white py-3 rounded-lg hover:bg-[#F0F0F0] hover:text-black border border-black transition-all"
           >
-            Sign Up
+            Sign In
           </button>
         </form>
       </div>
@@ -143,4 +142,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default SignIn;

@@ -1,35 +1,45 @@
-import React, { useEffect } from 'react'
-import Header from '../components/Header'
-import { useLocation } from 'react-router';
-import { useSelector } from 'react-redux';
-import ProductCard from '../components/common/productCard';
-import Footer from '../components/Footer';
-import FooterSubcontent from '../components/FooterSubcontent';
+import React, { useEffect } from "react";
+import Header from "../components/Header";
+import { useLocation, useNavigate } from "react-router";
+import { useSelector } from "react-redux";
+import ProductCard from "../components/common/productCard";
+import Footer from "../components/Footer";
+import FooterSubcontent from "../components/FooterSubcontent";
+import { auth, onAuthStateChanged } from "../Firebase/firebase";
 
 const CategoryPage = () => {
-    
-  const ProductData = useSelector((state) =>state?.AllProducts)
+  const navigate = useNavigate();
 
-    useEffect(() => {
-      window.scrollTo(0, 0);
-    }, []); 
+  const ProductData = useSelector((state) => state?.AllProducts);
+  const location = useLocation();
+  const passedState = location.state;
+  const filterCat = ProductData.filter((item) => item.category == passedState);
 
-    const location = useLocation();
-    const passedState = location.state;
-   const filterCat = ProductData.filter((item)=> item.category == passedState)
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        navigate("/SignUp");
+      }
+    });
    
-   
+  }, []);
+
+
+  
   return (
     <div>
-      <Header/>
-      
-      <h1 className='text-4xl font-bold text-center'>Products</h1>
+      <Header />
+
+      <h1 className="text-4xl font-bold text-center">Products</h1>
       <div className="flex flex-wrap justify-center gap-5 max-w-[1200px] mx-auto my-5">
-      { passedState == "all" ? ProductData.map((item)=>{
-          return <ProductCard key={item.id} product={item} />
-        }) : filterCat.map((item)=>{
-          return <ProductCard key={item.id} product={item} />
-        })}
+        {passedState == "all"
+          ? ProductData.map((item) => {
+              return <ProductCard key={item.id} product={item} />;
+            })
+          : filterCat.map((item) => {
+              return <ProductCard key={item.id} product={item} />;
+            })}
       </div>
       <div
         className="bg-white rounded mt-56   "
@@ -37,11 +47,11 @@ const CategoryPage = () => {
       >
         <Footer />
         <div className="w-[1150px] h-[200px] bg-black mx-auto mt-[-410px] rounded-lg">
-       <FooterSubcontent/>
-      </div>
+          <FooterSubcontent />
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CategoryPage
+export default CategoryPage;

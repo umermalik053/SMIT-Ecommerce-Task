@@ -5,11 +5,15 @@ import { IoFilterOutline } from "react-icons/io5";
 import ReviewCard from "./common/ReviewCard";
 import Faqs from "./Faqs";
 import ProductCard from "./common/productCard";
+import { auth, onAuthStateChanged } from "../Firebase/firebase";
+import { useNavigate } from "react-router";
 
 const Detail = ({ detail }) => {
   const [showToast, setShowToast] = useState(false);
   const ProductData = useSelector((state)=>state?.AllProducts.slice(28, 32))
   const [activeTab, setActiveTab] = useState("Rating&Review");
+  const navigate = useNavigate()
+
 
   const tabs = [
     { id: "ProductDetail", label: "Product Detail", content: detail },
@@ -90,10 +94,26 @@ const Detail = ({ detail }) => {
   const [count, setCount] = useState(0);
   const Dispatch = useDispatch();
   const addToCart = (Data) => {
-    Dispatch({ type: ProductAction.Add_Cart, payload: Data });
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        
+        const uid = user.uid;
+        // Dispatch({type: ProductAction.Add_Cart, payload: Data})
+        Dispatch({ type: ProductAction.Add_Cart, payload: Data });
 
     setShowToast(true);
     setTimeout(() => setShowToast(false), 3000);
+        // ...
+      } else {
+        // User is signed out
+        // ...
+        navigate('/signUp')
+      }
+    })
+    // Dispatch({ type: ProductAction.Add_Cart, payload: Data });
+
+    // setShowToast(true);
+    // setTimeout(() => setShowToast(false), 3000);
   };
   const increment = () => {
     setCount(count + 1);

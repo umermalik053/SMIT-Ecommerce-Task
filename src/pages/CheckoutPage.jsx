@@ -1,10 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Checkout from "../components/CheckOut/Checkout";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import FooterSubcontent from "../components/FooterSubcontent";
+import { auth, onAuthStateChanged } from "../Firebase/firebase";
+import { useNavigate } from "react-router";
 
 const CheckoutPage = () => {
+  const navigate = useNavigate()
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        navigate("/SignUp");
+      }
+    });
+   
+  }, []);
   return (
     <div>
       <Header />

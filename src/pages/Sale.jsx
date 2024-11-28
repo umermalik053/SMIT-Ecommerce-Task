@@ -1,11 +1,23 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Header from '../components/Header'
 import { useSelector } from 'react-redux'
 import Footer from '../components/Footer'
 import FooterSubcontent from '../components/FooterSubcontent'
 import ProductCard from '../components/common/productCard'
+import { useNavigate } from 'react-router'
+import { auth, onAuthStateChanged } from '../Firebase/firebase'
 
 const Sale = () => {
+  const navigate = useNavigate()
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        navigate("/SignUp");
+      }
+    });
+   
+  }, []);
     const product = useSelector((state)=>state?.AllProducts)
     // onSale
     const ProductData = product.filter((item)=> item.onSale)

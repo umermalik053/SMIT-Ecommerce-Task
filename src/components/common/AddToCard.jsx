@@ -19,10 +19,11 @@ const AddToCard = ({product}) => {
             <img className='h-[150px] w-[150px] rounded-lg' src={product.image} alt="" />
                 
             </div>
-            <div className=" flex flex-col gap-3">
+            <div className=" flex flex-col gap-1">
                 <h1 className='text-2xl font-bold'>{product?.title.slice(0,25)}...</h1>
                 <p className='text-sm'>Brand: {product.brand}</p>
                 <p className='text-sm'>Color: {product.color}</p>
+                <p className='text-sm'>quantity: {product.quantity}</p>
                 <p className='text-2xl font-bold'>${product.price}{product.discount ?<span className='text-[#00000066] line-through ml-2' > ${ product.price+product.discount } </span>: null}</p>
             </div>
             <RiDeleteBin5Fill onClick={()=>removeProduct(product.id)}  className='text-3xl text-[red] absolute top-0 right-7 cursor-pointer'/>

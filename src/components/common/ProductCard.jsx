@@ -3,6 +3,7 @@ import { FaCartPlus } from "react-icons/fa";
 import { useDispatch} from 'react-redux';
 import { ProductAction } from '../../Store/Action/ActionType';
 import { useNavigate } from 'react-router';
+import { auth, onAuthStateChanged } from '../../Firebase/firebase';
 
 const ProductCard = ({product}) => {
   const [showToast, setShowToast] = useState(false);
@@ -12,7 +13,19 @@ const ProductCard = ({product}) => {
   // const Selector = useSelector((state)=>state?.Cart)
   
   const addToCart = (Data) => {
-    Dispatch({type: ProductAction.Add_Cart, payload: Data})
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        
+        const uid = user.uid;
+        Dispatch({type: ProductAction.Add_Cart, payload: Data})
+        // ...
+      } else {
+        // User is signed out
+        // ...
+        navigate('/signUp')
+      }
+    })
+    // Dispatch({type: ProductAction.Add_Cart, payload: Data})
     
     setShowToast(true);
     setTimeout(() => setShowToast(false), 3000);

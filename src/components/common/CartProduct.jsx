@@ -5,20 +5,20 @@ import { NavLink } from "react-router-dom";
 
 const CartProduct = () => {
   const CartData = useSelector((state)=>state?.Cart)
-  console.log(CartData)
+
   let priceCalculate = CartData.reduce((acc,curr)=>{
 
     if(curr.discount) {
-      return acc + curr.price + curr.discount
+      return (acc + curr.price + curr.discount )* curr.quantity
     } else {
-      return acc + curr.price + 0
+      return (acc + curr.price + 0 ) * curr.quantity
     }
   },0)
   let discountCalculate = CartData.reduce((acc,curr)=>{
    if(curr.discount) {
-      return acc + curr.discount
-    } else {
-      return acc + 0
+      return (acc + curr.discount) * curr.quantity
+    } else if (curr.quantity) {
+      return (acc + 0) * quantity
     }
   },0)
   console.log(priceCalculate)
